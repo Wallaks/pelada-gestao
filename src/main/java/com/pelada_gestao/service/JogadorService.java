@@ -1,0 +1,14 @@
+package com.pelada_gestao.service;
+
+import com.pelada_gestao.model.Jogador;
+
+import java.util.List;
+
+public interface JogadorService {
+
+    Jogador salvar(Jogador jogador);
+
+    List<Jogador> listarTodos();
+
+    void deletarPorId(Long id);
+}
