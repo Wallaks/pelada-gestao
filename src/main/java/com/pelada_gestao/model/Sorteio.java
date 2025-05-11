@@ -1,5 +1,6 @@
 package com.pelada_gestao.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +25,7 @@ public class Sorteio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
 
     @OneToMany(mappedBy = "sorteio", cascade = CascadeType.ALL, orphanRemoval = true)
