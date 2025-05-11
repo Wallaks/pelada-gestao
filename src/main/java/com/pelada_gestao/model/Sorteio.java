@@ -28,6 +28,7 @@ public class Sorteio {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
 
-    @OneToMany(mappedBy = "sorteio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sorteio", orphanRemoval = true)
     private List<JogadorSorteado> jogadores = new ArrayList<>();
+
 }
