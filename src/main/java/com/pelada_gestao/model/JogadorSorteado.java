@@ -1,5 +1,6 @@
 package com.pelada_gestao.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.pelada_gestao.enuns.TimeEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,5 +35,7 @@ public class JogadorSorteado {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sorteio_id")
+    @JsonBackReference
     private Sorteio sorteio;
+
 }

@@ -1,6 +1,7 @@
 package com.pelada_gestao.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +29,8 @@ public class Sorteio {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
 
-    @OneToMany(mappedBy = "sorteio", orphanRemoval = true)
+    @OneToMany(mappedBy = "sorteio", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<JogadorSorteado> jogadores = new ArrayList<>();
 
 }
