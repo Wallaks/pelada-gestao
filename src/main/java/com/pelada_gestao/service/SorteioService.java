@@ -4,6 +4,8 @@ import com.pelada_gestao.enuns.TimeEnum;
 import com.pelada_gestao.model.JogadorSorteado;
 import com.pelada_gestao.model.Sorteio;
 import com.pelada_gestao.repository.SorteioRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,16 @@ public class SorteioService {
     @Autowired
     private SorteioRepository sorteioRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(SorteioService.class);
+
     public Sorteio salvar(Sorteio sorteio) {
-        sortear(sorteio);
-        return sorteioRepository.save(sorteio);
+        try {
+            sortear(sorteio);
+            return sorteioRepository.save(sorteio);
+        } catch (Exception e) {
+            logger.error("Erro ao salvar sorteio: {}", e.getMessage(), e);
+            throw e;
+        }
     }
 
     public List<Sorteio> listarTodos() {
