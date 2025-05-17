@@ -1,18 +1,15 @@
 package com.pelada_gestao.model;
 
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-public class Sorteio {
+public class Jogador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +17,13 @@ public class Sorteio {
 
     private String nome;
 
-    private Integer jogadoresPorEquipe;
+    private boolean goleiro;
 
     private LocalDate data;
 
-    @OneToMany(mappedBy = "sorteio", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Jogador> jogadores = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "sorteio_id", nullable = false)
+    private Sorteio sorteio;
 
     // Getters e Setters
 
@@ -45,12 +43,12 @@ public class Sorteio {
         this.nome = nome;
     }
 
-    public Integer getJogadoresPorEquipe() {
-        return jogadoresPorEquipe;
+    public boolean isGoleiro() {
+        return goleiro;
     }
 
-    public void setJogadoresPorEquipe(Integer jogadoresPorEquipe) {
-        this.jogadoresPorEquipe = jogadoresPorEquipe;
+    public void setGoleiro(boolean goleiro) {
+        this.goleiro = goleiro;
     }
 
     public LocalDate getData() {
@@ -61,11 +59,11 @@ public class Sorteio {
         this.data = data;
     }
 
-    public List<Jogador> getJogadores() {
-        return jogadores;
+    public Sorteio getSorteio() {
+        return sorteio;
     }
 
-    public void setJogadores(List<Jogador> jogadores) {
-        this.jogadores = jogadores;
+    public void setSorteio(Sorteio sorteio) {
+        this.sorteio = sorteio;
     }
 }
