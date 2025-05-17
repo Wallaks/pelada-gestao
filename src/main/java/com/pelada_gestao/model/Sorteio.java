@@ -27,7 +27,6 @@ public class Sorteio {
     @OneToMany(mappedBy = "sorteio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Jogador> jogadores = new ArrayList<>();
 
-    // Getters e Setters
 
     public Long getId() {
         return id;

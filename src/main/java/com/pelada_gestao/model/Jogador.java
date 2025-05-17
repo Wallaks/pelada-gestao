@@ -1,5 +1,7 @@
 package com.pelada_gestao.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +25,9 @@ public class Jogador {
 
     @ManyToOne
     @JoinColumn(name = "sorteio_id", nullable = false)
+    @JsonIgnore
     private Sorteio sorteio;
+
 
     // Getters e Setters
 
