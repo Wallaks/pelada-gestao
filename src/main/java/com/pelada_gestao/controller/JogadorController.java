@@ -1,5 +1,6 @@
 package com.pelada_gestao.controller;
 
+import com.pelada_gestao.dto.JogadorResponseDTO;
 import com.pelada_gestao.model.Jogador;
 import com.pelada_gestao.service.JogadorService;
 import com.pelada_gestao.service.SorteioService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/jogadores")
@@ -38,9 +40,22 @@ public class JogadorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Jogador>> listarTodos() {
-        return ResponseEntity.ok(jogadorService.listarTodos());
+    public ResponseEntity<List<JogadorResponseDTO>> listarTodos() {
+        List<Jogador> jogadores = jogadorService.listarTodos();
+
+        List<JogadorResponseDTO> dtoList = jogadores.stream()
+                .map(j -> new JogadorResponseDTO(
+                        j.getId(),
+                        j.getNome(),
+                        j.isGoleiro(),
+                        j.getData(),
+                        j.getSorteio().getId()
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtoList);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
