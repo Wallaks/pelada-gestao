@@ -57,21 +57,40 @@ public class SorteioServiceImpl implements SorteioService {
         List<Jogador> jogadores = jogadorRepository.findBySorteioId(id);
         Collections.shuffle(jogadores);
 
+        List<Jogador> goleiros = new ArrayList<>();
+        List<Jogador> naoGoleiros = new ArrayList<>();
+        for (Jogador jogador : jogadores) {
+            if (jogador.isGoleiro()) {
+                goleiros.add(jogador);
+            } else {
+                naoGoleiros.add(jogador);
+            }
+        }
+
         List<Jogador> timeAzul = new ArrayList<>();
         List<Jogador> timeVermelho = new ArrayList<>();
         List<Jogador> reservas = new ArrayList<>();
-
         int qtdPorTime = sorteio.getJogadoresPorEquipe();
-        boolean jaTemGoleiroAzul = false;
-        boolean jaTemGoleiroVermelho = false;
 
-        for (Jogador jogador : jogadores) {
-            if (podeAdicionarNoTime(timeAzul, qtdPorTime, jogador, jaTemGoleiroAzul)) {
+        if (goleiros.size() >= 2) {
+            Jogador goleiroAzul = goleiros.get(0);
+            Jogador goleiroVermelho = goleiros.get(1);
+            timeAzul.add(goleiroAzul);
+            timeVermelho.add(goleiroVermelho);
+
+            for (int i = 2; i < goleiros.size(); i++) {
+                reservas.add(goleiros.get(i));
+            }
+        } else if (goleiros.size() == 1) {
+            Jogador unicoGoleiro = goleiros.get(0);
+            timeAzul.add(unicoGoleiro);
+        }
+
+        for (Jogador jogador : naoGoleiros) {
+            if (timeAzul.size() < qtdPorTime) {
                 timeAzul.add(jogador);
-                if (jogador.isGoleiro()) jaTemGoleiroAzul = true;
-            } else if (podeAdicionarNoTime(timeVermelho, qtdPorTime, jogador, jaTemGoleiroVermelho)) {
+            } else if (timeVermelho.size() < qtdPorTime) {
                 timeVermelho.add(jogador);
-                if (jogador.isGoleiro()) jaTemGoleiroVermelho = true;
             } else {
                 reservas.add(jogador);
             }
