@@ -45,6 +45,7 @@ public class SorteioServiceImpl implements SorteioService {
         repository.deleteById(id);
     }
 
+    @Override
     public Map<String, List<Jogador>> sortearTimes(Long id) {
         Sorteio sorteio = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sorteio não encontrado"));
@@ -61,19 +62,24 @@ public class SorteioServiceImpl implements SorteioService {
         List<Jogador> reservas = new ArrayList<>();
 
         int qtdPorTime = sorteio.getJogadoresPorEquipe();
+        boolean jaTemGoleiroAzul = false;
+        boolean jaTemGoleiroVermelho = false;
 
         for (Jogador jogador : jogadores) {
-            if (timeAzul.size() < qtdPorTime) {
+            if (podeAdicionarNoTime(timeAzul, qtdPorTime, jogador, jaTemGoleiroAzul)) {
                 timeAzul.add(jogador);
-                salvarSorteio(jogador, id, TimeEnum.AZUL);
-            } else if (timeVermelho.size() < qtdPorTime) {
+                if (jogador.isGoleiro()) jaTemGoleiroAzul = true;
+            } else if (podeAdicionarNoTime(timeVermelho, qtdPorTime, jogador, jaTemGoleiroVermelho)) {
                 timeVermelho.add(jogador);
-                salvarSorteio(jogador, id, TimeEnum.VERMELHO);
+                if (jogador.isGoleiro()) jaTemGoleiroVermelho = true;
             } else {
                 reservas.add(jogador);
-                salvarSorteio(jogador, id, TimeEnum.RESERVA);
             }
         }
+
+        salvarSorteioEmLote(timeAzul, id, TimeEnum.AZUL);
+        salvarSorteioEmLote(timeVermelho, id, TimeEnum.VERMELHO);
+        salvarSorteioEmLote(reservas, id, TimeEnum.RESERVA);
 
         sorteio.setSorteado(true);
         repository.save(sorteio);
@@ -86,13 +92,22 @@ public class SorteioServiceImpl implements SorteioService {
         return resultado;
     }
 
-    private void salvarSorteio(Jogador jogador, Long sorteioId, TimeEnum time) {
-        JogadorSorteado js = new JogadorSorteado();
-        js.setJogadorId(jogador.getId());
-        js.setSorteioId(sorteioId);
-        js.setTime(time);
-        js.setData(LocalDate.now());
-        jogadorSorteadoRepository.save(js);
+    private boolean podeAdicionarNoTime(List<Jogador> time, int limite, Jogador jogador, boolean jaTemGoleiro) {
+        if (time.size() >= limite) return false;
+        return !jogador.isGoleiro() || !jaTemGoleiro;
+    }
+
+    private void salvarSorteioEmLote(List<Jogador> jogadores, Long sorteioId, TimeEnum time) {
+        List<JogadorSorteado> lista = new ArrayList<>();
+        for (Jogador jogador : jogadores) {
+            JogadorSorteado js = new JogadorSorteado();
+            js.setJogadorId(jogador.getId());
+            js.setSorteioId(sorteioId);
+            js.setTime(time);
+            js.setData(LocalDate.now());
+            lista.add(js);
+        }
+        jogadorSorteadoRepository.saveAll(lista);
     }
 
     public Map<String, List<Jogador>> resultadoDoSorteio(Long id) {
