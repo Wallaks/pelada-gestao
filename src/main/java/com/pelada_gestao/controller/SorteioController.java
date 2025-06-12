@@ -2,6 +2,7 @@ package com.pelada_gestao.controller;
 
 import com.pelada_gestao.model.Jogador;
 import com.pelada_gestao.model.Sorteio;
+import com.pelada_gestao.model.request.SorteioRequest;
 import com.pelada_gestao.service.SorteioService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,13 @@ public class SorteioController {
     }
 
     @PostMapping
-    public ResponseEntity<Sorteio> criar(@RequestBody Sorteio sorteio) {
+    public ResponseEntity<Sorteio> criar(@RequestBody SorteioRequest SorteioRequest) {
+        Sorteio sorteio = new Sorteio();
+        sorteio.setNome(SorteioRequest.getNome());
+        sorteio.setJogadoresPorEquipe(SorteioRequest.getJogadoresPorEquipe());
+        sorteio.setData(SorteioRequest.getData());
+        sorteio.setSorteado(SorteioRequest.isSorteado());
+
         Sorteio salvo = sorteioService.salvar(sorteio);
         return ResponseEntity.status(201).body(salvo);
     }

@@ -4,8 +4,8 @@ Este projeto é uma API REST desenvolvida em Java com Spring Boot para gerenciar
 
 ## Tecnologias Utilizadas
 
-- Java 17
-- Spring Boot 2.7.18
+- Java 21
+- Spring Boot 3.5.0
 - Spring Data JPA
 - Spring Boot Starter Validation
 - PostgreSQL
@@ -14,7 +14,7 @@ Este projeto é uma API REST desenvolvida em Java com Spring Boot para gerenciar
 ## Configuração do Ambiente
 
 ### Pré-requisitos
-- Java 17 instalado
+- Java 21 instalado
 - Maven instalado
 - PostgreSQL instalado e em execução
 
