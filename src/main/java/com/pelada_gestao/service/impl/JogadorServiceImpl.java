@@ -41,6 +41,7 @@ public class JogadorServiceImpl implements JogadorService {
             evento.setGoleiro(salvo.isGoleiro());
             evento.setDataCadastro(salvo.getData());
             evento.setNomeSorteio(sorteio.getNome());
+            evento.setEmailNotificacao(sorteio.getEmailNotificacao());
 
             try {
                 kafkaProducerService.enviarEventoJogador(evento);

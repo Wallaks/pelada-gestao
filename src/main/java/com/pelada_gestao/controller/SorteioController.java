@@ -35,6 +35,7 @@ public class SorteioController {
         sorteio.setJogadoresPorEquipe(SorteioRequest.getJogadoresPorEquipe());
         sorteio.setData(SorteioRequest.getData());
         sorteio.setSorteado(SorteioRequest.isSorteado());
+        sorteio.setEmailNotificacao(SorteioRequest.getEmailNotificacao());
 
         Sorteio salvo = sorteioService.salvar(sorteio);
         return ResponseEntity.status(201).body(salvo);

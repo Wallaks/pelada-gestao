@@ -13,6 +13,7 @@ public class JogadorCadastradoEvent {
     private boolean goleiro;
     private LocalDate dataCadastro;
     private String nomeSorteio;
+    private String emailNotificacao;
 
 
 }

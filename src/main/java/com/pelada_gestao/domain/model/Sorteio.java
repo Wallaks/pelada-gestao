@@ -29,5 +29,7 @@ public class Sorteio {
 
     private boolean sorteado = false;
 
+    private String emailNotificacao;
+
 
 }

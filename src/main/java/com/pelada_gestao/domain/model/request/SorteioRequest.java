@@ -12,11 +12,9 @@ public class SorteioRequest {
 
     @Size(max = 20)
     private String nome;
-
     private Integer jogadoresPorEquipe;
-
     private LocalDate data;
-
     private boolean sorteado = false;
+    private String emailNotificacao;
 
 }
