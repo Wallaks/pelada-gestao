@@ -1,9 +1,9 @@
 package com.pelada_gestao.service.impl;
 
 import com.pelada_gestao.enuns.TimeEnum;
-import com.pelada_gestao.model.Jogador;
-import com.pelada_gestao.model.JogadorSorteado;
-import com.pelada_gestao.model.Sorteio;
+import com.pelada_gestao.domain.model.Jogador;
+import com.pelada_gestao.domain.model.JogadorSorteado;
+import com.pelada_gestao.domain.model.Sorteio;
 import com.pelada_gestao.repository.JogadorRepository;
 import com.pelada_gestao.repository.JogadorSorteadoRepository;
 import com.pelada_gestao.repository.SorteioRepository;

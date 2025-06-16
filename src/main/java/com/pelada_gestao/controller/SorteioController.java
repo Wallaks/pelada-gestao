@@ -1,8 +1,8 @@
 package com.pelada_gestao.controller;
 
-import com.pelada_gestao.model.Jogador;
-import com.pelada_gestao.model.Sorteio;
-import com.pelada_gestao.model.request.SorteioRequest;
+import com.pelada_gestao.domain.model.Jogador;
+import com.pelada_gestao.domain.model.Sorteio;
+import com.pelada_gestao.domain.model.request.SorteioRequest;
 import com.pelada_gestao.service.SorteioService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.pelada_gestao.model.request;
+package com.pelada_gestao.domain.model.request;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.pelada_gestao.controller;
 
-import com.pelada_gestao.model.Jogador;
-import com.pelada_gestao.model.request.JogadorRequest;
+import com.pelada_gestao.domain.model.Jogador;
+import com.pelada_gestao.domain.model.request.JogadorRequest;
 import com.pelada_gestao.service.JogadorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

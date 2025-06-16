@@ -1,6 +1,6 @@
 package com.pelada_gestao.service;
 
-import com.pelada_gestao.model.Jogador;
+import com.pelada_gestao.domain.model.Jogador;
 
 import java.util.List;
 

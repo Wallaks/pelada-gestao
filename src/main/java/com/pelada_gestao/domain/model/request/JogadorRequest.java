@@ -1,4 +1,4 @@
-package com.pelada_gestao.model.request;
+package com.pelada_gestao.domain.model.request;
 
 import lombok.Getter;
 import lombok.Setter;
