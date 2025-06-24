@@ -1,6 +1,6 @@
 # Pelada Gestão - Backend
 
-Este projeto é uma API REST desenvolvida em Java com Spring Boot para gerenciar sorteios e jogadores de peladas (futebol amador). O backend permite cadastrar, listar, sortear e excluir jogadores e sorteios.
+Este projeto possui API RESTs desenvolvidas em Java com Spring Boot para gerenciar sorteios e jogadores de peladas (futebol amador). O backend permite cadastrar, listar, sortear e excluir jogadores e sorteios.
 
 ## Tecnologias Utilizadas
 
@@ -16,11 +16,10 @@ Este projeto é uma API REST desenvolvida em Java com Spring Boot para gerenciar
 ### Pré-requisitos
 - Java 21 instalado
 - Maven instalado
-- PostgreSQL instalado e em execução
 
 ### Configuração do Banco de Dados
 
-No arquivo `src/main/resources/application.properties`, configure as propriedades de acesso ao banco de dados PostgreSQL:
+No arquivo `src/main/resources/application-prod.properties`, configure as propriedades de acesso ao banco de dados PostgreSQL:
 
 ```
 spring.datasource.url=sua_url
@@ -43,11 +42,25 @@ Para rodar a aplicação localmente:
 mvn spring-boot:run
 ```
 
+## Autenticação
+
+Para acessar os endpoints protegidos, é necessário obter um token JWT através do endpoint de autenticação:
+
+- `POST /auth/login`  
+  Envie suas credenciais para receber o token JWT.
+
+Inclua o token JWT no header `Authorization` das requisições:
+Authorization: Bearer seu_token_jwt
+
 ## Endpoints Principais
 
-- `POST /api/sorteios` - Criar sorteio
-- `GET /api/sorteios` - Listar sorteios
-- `DELETE /api/sorteios/{id}` - Excluir sorteio
-- `GET /api/sorteios/sortear/{id}` - Sortear times
-- `GET /api/sorteios/resultado/{id}` - Ver resultado do sorteio
+- `POST /api/sorteios` - Criar sorteio (requer token)
+- `GET /api/sorteios` - Listar sorteios (requer token)
+- `DELETE /api/sorteios/{id}` - Excluir sorteio (requer token)
+- `GET /api/sorteios/sortear/{id}` - Sortear times (requer token)
+- `GET /api/sorteios/resultado/{id}` - Ver resultado do sorteio (requer token)
 
+## Observações
+
+- O endpoint `/actuator/**` está liberado e não exige autenticação.
+- Todos os demais endpoints exigem autenticação via JWT.
