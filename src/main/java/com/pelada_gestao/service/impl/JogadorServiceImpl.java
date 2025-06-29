@@ -2,6 +2,7 @@ package com.pelada_gestao.service.impl;
 
 import com.pelada_gestao.domain.event.JogadorCadastradoEvent;
 import com.pelada_gestao.domain.model.Jogador;
+import com.pelada_gestao.exception.custom.RecursoNaoEncontradoException;
 import com.pelada_gestao.kafka.KafkaProducerService;
 import com.pelada_gestao.repository.JogadorRepository;
 import com.pelada_gestao.repository.SorteioRepository;
@@ -28,6 +29,12 @@ public class JogadorServiceImpl implements JogadorService {
         this.repository = repository;
         this.sorteioRepository = sorteioRepository;
         this.kafkaProducerService = kafkaProducerService;
+    }
+
+    @Override
+    public Jogador buscarPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Jogador não encontrado com id: " + id));
     }
 
     @Override
@@ -62,5 +69,10 @@ public class JogadorServiceImpl implements JogadorService {
     @Transactional
     public void deletarPorId(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByNomeAndSorteioId(String nome, Long sorteioId) {
+        return repository.existsByNomeAndSorteioId(nome, sorteioId);
     }
 }

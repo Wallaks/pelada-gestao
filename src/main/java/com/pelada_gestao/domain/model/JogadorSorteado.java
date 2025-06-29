@@ -20,14 +20,10 @@ public class JogadorSorteado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long sorteioId;
-
     private Long jogadorId;
-
     @Enumerated(EnumType.STRING)
     private TimeEnum time;
-
     private LocalDate data;
 
 }

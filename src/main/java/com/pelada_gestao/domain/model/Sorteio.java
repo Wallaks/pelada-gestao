@@ -19,17 +19,12 @@ public class Sorteio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Size(max = 20)
     private String nome;
-
     private Integer jogadoresPorEquipe;
-
     private LocalDate data;
-
     private boolean sorteado = false;
-
     private String emailNotificacao;
-
+    private String cadastradoPor;
 
 }

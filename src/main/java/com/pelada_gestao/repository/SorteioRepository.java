@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SorteioRepository extends JpaRepository<Sorteio, Long> {
 
+    boolean existsByNomeAndCadastradoPor(String nome, String cadastradoPor);
+
 }

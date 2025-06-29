@@ -11,4 +11,6 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long> {
 
     List<Jogador> findBySorteioId(Long sorteioId);
 
+    boolean existsByNomeAndSorteioId(String nome, Long sorteioId);
+
 }

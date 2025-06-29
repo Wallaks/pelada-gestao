@@ -1,9 +1,11 @@
 package com.pelada_gestao.service.impl;
 
-import com.pelada_gestao.enuns.TimeEnum;
 import com.pelada_gestao.domain.model.Jogador;
 import com.pelada_gestao.domain.model.JogadorSorteado;
 import com.pelada_gestao.domain.model.Sorteio;
+import com.pelada_gestao.enuns.TimeEnum;
+import com.pelada_gestao.exception.custom.OperacaoNaoPermitidaException;
+import com.pelada_gestao.exception.custom.RecursoNaoEncontradoException;
 import com.pelada_gestao.repository.JogadorRepository;
 import com.pelada_gestao.repository.JogadorSorteadoRepository;
 import com.pelada_gestao.repository.SorteioRepository;
@@ -31,6 +33,12 @@ public class SorteioServiceImpl implements SorteioService {
     }
 
     @Override
+    public Sorteio buscarPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Sorteio não encontrado com id: " + id));
+    }
+
+    @Override
     public Sorteio salvar(Sorteio sorteio) {
         return repository.save(sorteio);
     }
@@ -48,10 +56,10 @@ public class SorteioServiceImpl implements SorteioService {
     @Override
     public Map<String, List<Jogador>> sortearTimes(Long id) {
         Sorteio sorteio = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sorteio não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Sorteio não encontrado com id: " + id));
 
         if (sorteio.isSorteado()) {
-            throw new RuntimeException("Este sorteio já foi realizado e não pode ser feito novamente.");
+            throw new OperacaoNaoPermitidaException("Este sorteio já foi realizado e não pode ser feito novamente.");
         }
 
         List<Jogador> jogadores = jogadorRepository.findBySorteioId(id);
@@ -59,6 +67,7 @@ public class SorteioServiceImpl implements SorteioService {
 
         List<Jogador> goleiros = new ArrayList<>();
         List<Jogador> naoGoleiros = new ArrayList<>();
+
         for (Jogador jogador : jogadores) {
             if (jogador.isGoleiro()) {
                 goleiros.add(jogador);
@@ -73,17 +82,11 @@ public class SorteioServiceImpl implements SorteioService {
         int qtdPorTime = sorteio.getJogadoresPorEquipe();
 
         if (goleiros.size() >= 2) {
-            Jogador goleiroAzul = goleiros.get(0);
-            Jogador goleiroVermelho = goleiros.get(1);
-            timeAzul.add(goleiroAzul);
-            timeVermelho.add(goleiroVermelho);
-
-            for (int i = 2; i < goleiros.size(); i++) {
-                reservas.add(goleiros.get(i));
-            }
+            timeAzul.add(goleiros.get(0));
+            timeVermelho.add(goleiros.get(1));
+            reservas.addAll(goleiros.subList(2, goleiros.size()));
         } else if (goleiros.size() == 1) {
-            Jogador unicoGoleiro = goleiros.get(0);
-            timeAzul.add(unicoGoleiro);
+            timeAzul.add(goleiros.get(0));
         }
 
         for (Jogador jogador : naoGoleiros) {
@@ -111,9 +114,37 @@ public class SorteioServiceImpl implements SorteioService {
         return resultado;
     }
 
-    private boolean podeAdicionarNoTime(List<Jogador> time, int limite, Jogador jogador, boolean jaTemGoleiro) {
-        if (time.size() >= limite) return false;
-        return !jogador.isGoleiro() || !jaTemGoleiro;
+    public Map<String, List<Jogador>> resultadoDoSorteio(Long id) {
+        Sorteio sorteio = repository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Sorteio não encontrado com id: " + id));
+
+        if (!sorteio.isSorteado()) {
+            throw new OperacaoNaoPermitidaException("Sorteio ainda não foi realizado.");
+        }
+
+        List<JogadorSorteado> sorteados = jogadorSorteadoRepository.findBySorteioId(id);
+
+        List<Jogador> timeAzul = new ArrayList<>();
+        List<Jogador> timeVermelho = new ArrayList<>();
+        List<Jogador> reservas = new ArrayList<>();
+
+        for (JogadorSorteado js : sorteados) {
+            Jogador jogador = jogadorRepository.findById(js.getJogadorId())
+                    .orElseThrow(() -> new RecursoNaoEncontradoException("Jogador não encontrado com id: " + js.getJogadorId()));
+
+            switch (js.getTime()) {
+                case AZUL -> timeAzul.add(jogador);
+                case VERMELHO -> timeVermelho.add(jogador);
+                case RESERVA -> reservas.add(jogador);
+            }
+        }
+
+        Map<String, List<Jogador>> resultado = new HashMap<>();
+        resultado.put("timeAzul", timeAzul);
+        resultado.put("timeVermelho", timeVermelho);
+        resultado.put("reservas", reservas);
+
+        return resultado;
     }
 
     private void salvarSorteioEmLote(List<Jogador> jogadores, Long sorteioId, TimeEnum time) {
@@ -129,42 +160,8 @@ public class SorteioServiceImpl implements SorteioService {
         jogadorSorteadoRepository.saveAll(lista);
     }
 
-    public Map<String, List<Jogador>> resultadoDoSorteio(Long id) {
-        Sorteio sorteio = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sorteio não encontrado"));
-
-        if (!sorteio.isSorteado()) {
-            throw new RuntimeException("Sorteio ainda não foi realizado.");
-        }
-
-        List<JogadorSorteado> sorteados = jogadorSorteadoRepository.findBySorteioId(id);
-
-        List<Jogador> timeAzul = new ArrayList<>();
-        List<Jogador> timeVermelho = new ArrayList<>();
-        List<Jogador> reservas = new ArrayList<>();
-
-        for (JogadorSorteado js : sorteados) {
-            Jogador jogador = jogadorRepository.findById(js.getJogadorId())
-                    .orElseThrow(() -> new RuntimeException("Jogador não encontrado: id " + js.getJogadorId()));
-
-            switch (js.getTime()) {
-                case AZUL:
-                    timeAzul.add(jogador);
-                    break;
-                case VERMELHO:
-                    timeVermelho.add(jogador);
-                    break;
-                case RESERVA:
-                    reservas.add(jogador);
-                    break;
-            }
-        }
-
-        Map<String, List<Jogador>> resultado = new HashMap<>();
-        resultado.put("timeAzul", timeAzul);
-        resultado.put("timeVermelho", timeVermelho);
-        resultado.put("reservas", reservas);
-
-        return resultado;
+    @Override
+    public boolean existsByNomeAndCadastradoPor(String nome, String cadastradoPor) {
+        return repository.existsByNomeAndCadastradoPor(nome, cadastradoPor);
     }
 }

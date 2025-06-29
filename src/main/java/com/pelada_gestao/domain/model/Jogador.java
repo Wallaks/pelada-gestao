@@ -18,13 +18,11 @@ public class Jogador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nome;
-
     private boolean goleiro;
-
     private LocalDate data;
-
     private Long sorteioId;
+    private String cadastradoPor;
+
 }
 

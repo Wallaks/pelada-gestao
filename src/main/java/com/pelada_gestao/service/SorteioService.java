@@ -8,6 +8,8 @@ import java.util.Map;
 
 public interface SorteioService {
 
+    Sorteio buscarPorId(Long id);
+
     Sorteio salvar(Sorteio sorteio);
 
     List<Sorteio> listarTodos();
@@ -17,5 +19,7 @@ public interface SorteioService {
     Map<String, List<Jogador>> sortearTimes(Long id);
 
     Map<String, List<Jogador>> resultadoDoSorteio(Long id);
+
+    boolean existsByNomeAndCadastradoPor(String nome, String cadastradoPor);
 
 }
